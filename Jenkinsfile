@@ -23,12 +23,18 @@ pipeline {
         }
         stage('build') {
             steps {
-                sh "mvn clean deploy -e -DskipTests -s settings.xml -Dcheckstyle.skip=true"
+                sh "mvn clean install -e -DskipTests -s settings.xml -Dcheckstyle.skip=true"
+            }
+            post {
+                success {
+                    echo "Archiving"
+                    archiveArtifacts artifacts: '**/*.jar'
+                }
             }
         }
         stage('test') {
             steps {
-                sh "mvn test -e  -Dcheckstyle.skip=true"
+                sh "mvn test -e  -Dcheckstyle.skip=true -Dmaven.test.failure.ignore=true"
             }
         }
     }
