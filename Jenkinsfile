@@ -23,12 +23,12 @@ pipeline {
         }
         stage('build') {
             steps {
-                sh "mvn clean install -e -DskipTests -s settings.xml -Dcheckstyle.skip=true"
+                sh "mvn clean deploy -e -DskipTests -s settings.xml -Dcheckstyle.skip=true"
             }
         }
         stage('test') {
             steps {
-                sh "mvn test -e"
+                sh "mvn test -e  -Dcheckstyle.skip=true"
             }
         }
     }
