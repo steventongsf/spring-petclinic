@@ -14,6 +14,8 @@ pipeline {
         NEXUSIP = "nexus01"
         NEXUSPORT = "8081"
         NEXUS_GRP_REPO = "sfhuskie-maven-group"
+        SONARSERVER = "sonarserver"
+        SONARSCANNER = "sonarscanner"
     }
     stages {
         stage('checkout') {
@@ -32,10 +34,30 @@ pipeline {
                 }
             }
         }
-        stage('test') {
+        stage('checkstyle') {
             steps {
-                sh "mvn test -e  -Dcheckstyle.skip=true -Dmaven.test.failure.ignore=true"
+                sh "mvn test -e -s settings.xml -Dcheckstyle.skip=true -Dmaven.test.failure.ignore=true"
             }
         }
+        stage('sonar') {
+            environment {
+                scannerHome = tool "${SONARSCANNER}"
+            }
+            steps {
+                withSonarQubeEnv("${SONARSERVER}") {
+                    sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=spring-petclinic \
+                    -Dsonar.projectName=spring-petclinic \
+                    -Dsonar.projectVersion=1.0 \
+                    -Dsonar.sources=src/ \
+                    -Dsonar.java.binaries=target/test-classes/
+                    -Dsonar.junit.reportsPaths=target/surefire-reports/ \
+                    -Dsonar.jacoco.reportsPaths=target/jacoco.exec \
+                    -Dsonar.verbose=true
+                    '''
+                    //-Dsonar.java.checkstyle.reportPaths=target/check-style.result.xml
+                }
+            }
+        }
+
     }
 }
