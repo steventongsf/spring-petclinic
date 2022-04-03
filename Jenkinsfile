@@ -45,12 +45,14 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv("${SONARSERVER}") {
-                    sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=spring-petclinic \
+                    sh '''${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.projectKey=spring-petclinic \
                     -Dsonar.projectName=spring-petclinic \
                     -Dsonar.projectVersion=1.0 \
-                    -Dsonar.sources=src/ \
-                    -Dsonar.java.binaries=target/test-classes/
-                    -Dsonar.junit.reportsPaths=target/surefire-reports/ \
+                    -Dsonar.sources=src/main/java \
+                    -Dsonar.tests=src/test/java \
+                    -Dsonar.java.binaries=target/test-classes/**/* \
+                    -Dsonar.junit.reportsPaths=target/surefire-reports \
                     -Dsonar.jacoco.reportsPaths=target/jacoco.exec \
                     -Dsonar.verbose=true
                     '''
