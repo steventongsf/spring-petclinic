@@ -53,7 +53,8 @@ pipeline {
                     -Dsonar.tests=src/test/java \
                     -Dsonar.java.binaries=target/test-classes/**/* \
                     -Dsonar.junit.reportsPaths=target/surefire-reports \
-                    -Dsonar.jacoco.reportsPaths=target/jacoco.exec \
+                    -Dsonar.jacoco.reportsPath=target/jacoco.exec \
+                    -Dsonar.dynamicAnalysis=reuseReports \
                     -Dsonar.verbose=true
                     '''
                     //-Dsonar.java.checkstyle.reportPaths=target/check-style.result.xml
