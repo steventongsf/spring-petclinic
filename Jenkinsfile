@@ -7,6 +7,7 @@ pipeline {
     environment {
         //JAVA_HOME = "/usr/lib/jvm/java-8-openjdk-amd64"
         SNAP_REPO = "sfhuskie-snapshot"
+        NEXUS_LOGIN = "nexus-admin-user"
         NEXUS_USER = "admin"
         NEXUS_PASS = "nexus"
         NEXUS_VERSION = "nexus3"
@@ -14,6 +15,7 @@ pipeline {
         NEXUSIP = "nexus01"
         NEXUSPORT = "8081"
         NEXUS_GRP_REPO = "sfhuskie-maven-group"
+        RELEASE_REPO = "sfhuskie-release"
         SONARSERVER = "sonarserver"
         SONARSCANNER = "sonarscanner"
     }
@@ -66,6 +68,27 @@ pipeline {
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
                 }
+            }
+        }
+        stage("upload") {
+            steps {
+                nexusArtifactUploader(
+                    nexusVersion: "nexus3",
+                    protocol: "http",
+                    nexusUrl: "${NEXUSIP}:${NEXUSPORT}",
+                    groupId: "com.sfhuskie.demo",
+                    version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}",
+                    repository: "${RELEASE_REPO}",
+                    credentialsId: "${NEXUS_LOGIN}",
+                    artifacts: [
+                        [
+                            artifactId: "spring-petclinic",
+                            classifier: "",
+                            file: "target/spring-petclinic-3.0.0-SNAPSHOT.jar",
+                            type: "jar"
+                        ]
+                    ]
+                )
             }
         }
 
