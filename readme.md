@@ -1,4 +1,5 @@
 # Spring PetClinic Sample Application [![Build Status](https://github.com/spring-projects/spring-petclinic/actions/workflows/maven-build.yml/badge.svg)](https://github.com/spring-projects/spring-petclinic/actions/workflows/maven-build.yml)
+This project was forked from the Spring Framework reference project for use in demonstrating continuous integration in the project https://github.com/steventongsf/devops-toolchain-environment.  All modifications in this project will support that purpose.
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/spring-projects/spring-petclinic)
 
